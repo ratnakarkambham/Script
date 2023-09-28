@@ -1,0 +1,40 @@
+<!-- api/templates/item_list.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<button onclick="loadItems('All')">View All</button>
+<button onclick="loadItems('Category1')">Category 1</button>
+<button onclick="loadItems('Category2')">Category 2</button>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+        </tr>
+    </thead>
+    <tbody id="item-table">
+        <!-- Items will be inserted here -->
+    </tbody>
+</table>
+
+<script>
+    function loadItems(category) {
+        const itemTable = document.getElementById('item-table');
+        fetch(`/api/items/${category}/`)
+            .then(response => response.json())
+            .then(data => {
+                itemTable.innerHTML = '';
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>${item.category}</td>
+                    `;
+                    itemTable.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+{% endblock %}
